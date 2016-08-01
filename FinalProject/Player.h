@@ -1,22 +1,24 @@
 #pragma once
 #include <string>
 
+using namespace std;
+
 class Player
 {
 public:
 	Player();
-	Player(std::string, std::string, std::string);
-	std::string firstName;
-	std::string lastName;
-	std::string dateOfBirth;
+	Player(string, string, string);
+	string firstName;
+	string lastName;
+	string dateOfBirth;
 
-	std::string getFirstName();
-	std::string getLastName();
-	std::string getDateOfBirth();
+	string getFirstName();
+	string getLastName();
+	string getDateOfBirth();
 
-	void setFirstName(std::string);
-	void setLastName(std::string);
-	void setDateOfBirth(std::string);
+	void setFirstName(string);
+	void setLastName(string);
+	void setDateOfBirth(string);
 	~Player();
 };
 
