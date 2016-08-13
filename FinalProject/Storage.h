@@ -9,12 +9,14 @@ class Storage
 {
 public:
 	Storage();
-	void connectToDb();
+	void query();
 	void seedDb();
 private:
 	sql::Driver *driver;
 	sql::Connection *con;
 	sql::Statement *stmt;
 	sql::ResultSet *res;
+	void connect();
+	void disconnect();
 };
 
