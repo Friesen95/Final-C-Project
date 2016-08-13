@@ -9,7 +9,8 @@ class Storage
 {
 public:
 	Storage();
-	~Storage();
+	void connectToDb();
+	void seedDb();
 private:
 	sql::Driver *driver;
 	sql::Connection *con;

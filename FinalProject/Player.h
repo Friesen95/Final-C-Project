@@ -19,6 +19,5 @@ public:
 	void setFirstName(string);
 	void setLastName(string);
 	void setDateOfBirth(string);
-	~Player();
 };
 
