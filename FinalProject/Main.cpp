@@ -10,9 +10,19 @@ using namespace std;
 int main()
 {
 	Storage storage;
+	Player p;
 
-	storage.query();
+	// Can add a player
+	storage.createPlayer(p);
 
+	// Can print all players
+	storage.printAllPlayers();
+
+	// Can retrieve a player
+	p.setId(1);
+	p.setFirstName("Alex");
+	p.setLastName("Andriishyn");
+	storage.getPlayer(p);
 
 	//ifstream playerRead("players.dat", ios::in | ios::binary);
 	//if (!playerRead) 
