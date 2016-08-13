@@ -24,11 +24,12 @@ int main()
 	p.setLastName("Andriishyn");
 	storage.getPlayer(p);
 
-	//ifstream playerRead("players.dat", ios::in | ios::binary);
-	//if (!playerRead) 
-	//	PopulateTestData(); //If players.dat doesn't exist (delete players.dat to reset testData)
+	// Can update a player
+	p.setFirstName("Alexander");
+	storage.updatePlayer(p);
 
-	//MainMenu();
+	// Can delete a player
+	storage.deletePlayer(p);
 
 	system("PAUSE");
 	return 0;

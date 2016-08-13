@@ -11,9 +11,11 @@ class Storage
 {
 public:
 	Storage();
-	void getPlayer(Player&);
 	void printAllPlayers();
+	void getPlayer(Player&);
 	void createPlayer(Player&);
+	void updatePlayer(Player&);
+	void deletePlayer(Player&);
 	void seedDb();
 private:
 	sql::Driver* driver;
