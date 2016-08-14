@@ -1,5 +1,6 @@
 #include "Header.h"
 #include "Player.h"
+#include "Storage.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,11 +9,27 @@ using namespace std;
 
 int main()
 {
-	ifstream playerRead("players.dat", ios::in | ios::binary);
-	if (!playerRead) 
-		PopulateTestData(); //If players.dat doesn't exist (delete players.dat to reset testData)
+	Storage storage;
+	Player p;
 
-	MainMenu();
+	// Can add a player
+	storage.createPlayer(p);
+
+	// Can print all players
+	storage.printAllPlayers();
+
+	// Can retrieve a player
+	p.setId(1);
+	p.setFirstName("Alex");
+	p.setLastName("Andriishyn");
+	storage.getPlayer(p);
+
+	// Can update a player
+	p.setFirstName("Alexander");
+	storage.updatePlayer(p);
+
+	// Can delete a player
+	storage.deletePlayer(p);
 
 	system("PAUSE");
 	return 0;

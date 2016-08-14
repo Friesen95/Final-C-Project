@@ -1,4 +1,5 @@
 USE cppfinal;
+SET SQL_SAFE_UPDATES = 0;
 
 DROP TABLE IF EXISTS Players;
 
@@ -12,4 +13,6 @@ VALUES ('Alex', 'Andriishyn'),
 ('Alex', 'Friesen'),
 ('Dan', 'Masci');
 
-SELECT * FROM Players
+DELETE FROM Players WHERE id > 3;
+
+SELECT * FROM Players;
