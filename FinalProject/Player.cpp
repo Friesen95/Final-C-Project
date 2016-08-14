@@ -6,33 +6,45 @@ Player::Player() {}
 Player::Player(string firstName, string lastName, string dateOfBirth)
 	: firstName(firstName), lastName(lastName), dateOfBirth(dateOfBirth)
 {
-
+	id = -1;
 }
 
-Player::~Player()
+int Player::getId() const
 {
+	return id;
 }
 
-string Player::getFirstName() {
+string Player::getFirstName() const
+{
 	return firstName;
 }
 
-string Player::getLastName() {
+string Player::getLastName() const
+{
 	return lastName;
 }
 
-string Player::getDateOfBirth() {
+string Player::getDateOfBirth() const
+{
 	return dateOfBirth;
 }
 
-void Player::setFirstName(string firstName) {
+void Player::setId(int id)
+{
+	this->id = id;
+}
+
+void Player::setFirstName(string firstName) 
+{
 	this->firstName = firstName;
 }
 
-void Player::setLastName(string lastName) {
+void Player::setLastName(string lastName) 
+{
 	this->lastName = lastName;
 }
 
-void Player::setDateOfBirth(string dateOfBirth) {
+void Player::setDateOfBirth(string dateOfBirth) 
+{
 	this->dateOfBirth = dateOfBirth;
 }
