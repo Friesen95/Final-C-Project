@@ -84,6 +84,10 @@ void Storage::updatePlayer(Player& updatedPlayer)
 
 	queryString.append("UPDATE Players SET firstName = '");
 	queryString.append(updatedPlayer.getFirstName());
+	queryString.append("', lastName = '");
+	queryString.append(updatedPlayer.getLastName());
+	queryString.append("', dateOfBirth = '");
+	queryString.append(updatedPlayer.getDateOfBirth());
 	queryString.append("' WHERE id = ");
 	queryString.append(to_string(updatedPlayer.getId()));
 
@@ -107,7 +111,7 @@ void Storage::deletePlayer(Player& deletedPlayer)
 
 void Storage::connect()
 {
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
+	con = driver->connect("tcp://127.0.0.1:3306", "root", "1234");
 	con->setSchema("cppfinal");
 	stmt = con->createStatement();
 	queryString = "";
@@ -124,10 +128,10 @@ void Storage::disconnect()
 
 void Storage::seedDb()
 {
-	int error;
-	connect();
+	//int error;
+	//connect();
 
-	//read seed.sql
-	
-	disconnect();
+	////read seed.sql
+	//
+	//disconnect();
 }
