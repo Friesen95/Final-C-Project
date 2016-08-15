@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Header.h"
 #include "Player.h"
+#include "Storage.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -20,51 +21,50 @@ headers from cppconn/ and mysql_driver.h + mysql_util.h
 
 using namespace std;
 
-int main(void)
-{
-	sql::Driver *driver;
-	sql::Connection *con;
-	sql::Statement *stmt;
-	sql::ResultSet *res;
-
-	/* Create a connection */
-	driver = get_driver_instance();
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
-
-	/* Connect to the MySQL test database */
-	con->setSchema("test");
-	stmt = con->createStatement();
-
-	/*stmt->execute("USE test");
-	stmt->execute("DROP TABLE IF EXISTS test");
-	stmt->execute("CREATE TABLE test(id INT, label CHAR(1))");
-	stmt->execute("INSERT INTO test(id, label) VALUES (1, 'a')");*/
-
-	res = stmt->executeQuery("SELECT id, label FROM test ORDER BY id ASC");
-	while (res->next()) {
-		// You can use either numeric offsets...
-		cout << "id = " << res->getString("id"); // getInt(1) returns the first column
-												 // ... or column names for accessing results.
-												 // The latter is recommended.
-		cout << ", label = '" << res->getString("label") << "'" << endl;
-	}
-
-	delete res;
-	delete stmt;
-	delete con;
-	cout << "Done" << endl;
-	system("pause");
-	return 0;
-}
-//int main()
+//int main(void)
 //{
-//	//PopulateTestData();
-//	system("pause");
-//	MainMenu();
+//	sql::Driver *driver;
+//	sql::Connection *con;
+//	sql::Statement *stmt;
+//	sql::ResultSet *res;
 //
-//	system("PAUSE");
+//	/* Create a connection */
+//	driver = get_driver_instance();
+//	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
+//
+//	/* Connect to the MySQL test database */
+//	con->setSchema("test");
+//	stmt = con->createStatement();
+//
+//	/*stmt->execute("USE test");
+//	stmt->execute("DROP TABLE IF EXISTS test");
+//	stmt->execute("CREATE TABLE test(id INT, label CHAR(1))");
+//	stmt->execute("INSERT INTO test(id, label) VALUES (1, 'a')");*/
+//
+//	res = stmt->executeQuery("SELECT id, label FROM test ORDER BY id ASC");
+//	while (res->next()) {
+//		// You can use either numeric offsets...
+//		cout << "id = " << res->getString("id"); // getInt(1) returns the first column
+//												 // ... or column names for accessing results.
+//												 // The latter is recommended.
+//		cout << ", label = '" << res->getString("label") << "'" << endl;
+//	}
+//
+//	delete res;
+//	delete stmt;
+//	delete con;
+//	cout << "Done" << endl;
+//	system("pause");
 //	return 0;
 //}
+Storage manager = Storage();
+int main()
+{
+	MainMenu();
+
+	system("PAUSE");
+	return 0;
+}
 void MainMenu() {
 	int choice = 0;
 	string message;
@@ -117,6 +117,7 @@ int SubMenu(int choice) {
 			<< "*************************\n"
 			<< "*     Create Player     *\n"
 			<< "*************************\n";
+		
 		break;
 	case 2:
 		cout
