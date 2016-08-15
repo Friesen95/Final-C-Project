@@ -17,8 +17,10 @@ void Storage::printAllPlayers()
 
 	while (res->next())
 	{
-		cout << "First Name: " << res->getString("firstName") << " ";
-		cout << ", Last Name: " << res->getString("lastName") << endl;
+		cout << "Player #" << res->getString("id") << ": " 
+			<< res->getString("firstName") << " "
+			<< res->getString("lastName") << " | " 
+			<< res->getString("dateOfBirth") << endl;
 	}
 
 	res->close();
@@ -32,20 +34,28 @@ void Storage::getPlayer(Player& p)
 {
 	connect();
 
+	//Build querystring - dependant on which information the user inputs
 	queryString.append("SELECT * FROM Players WHERE ");
 	queryString.append(p.getId() != -1 ? "id = " + to_string(p.getId()) + " " : "");
-	queryString.append(p.getFirstName() != "" ? "AND firstName = '" + p.getFirstName() + "' " : "");
-	queryString.append(p.getLastName() != "" ? "AND lastName = '" + p.getLastName() + "'" : "");
+	queryString.append(p.getId() != -1 && p.getFirstName() != "" ? "AND " : "");
+	queryString.append(p.getFirstName() != "" ? "firstName = '" + p.getFirstName() + "' " : "");
+	queryString.append((p.getId() != -1 || p.getFirstName() != "") && p.getLastName() != "" ? "AND " : "");
+	queryString.append(p.getLastName() != "" ? "lastName = '" + p.getLastName() + "' " : "");
 
 	res = stmt->executeQuery(queryString);
 
+	//Display all players that meet the search criteria
 	while (res->next())
 	{
 		// Update the player reference
 		p.setId(stoi(res->getString("id")));
 		p.setLastName(res->getString("LastName"));
 		p.setFirstName(res->getString("firstName"));
+		p.setDateOfBirth(res->getString("dateOfBirth"));
+		//Print player to screen
+		cout << "Player #" << p.getId() << ": " << p.getFirstName() << " " << p.getLastName() << endl;
 	}
+
 
 	res->close();
 	delete res;
@@ -57,7 +67,12 @@ void Storage::createPlayer(Player& newPlayer)
 	int error;
 	connect();
 
-	error = stmt->executeUpdate("INSERT INTO Players(firstName, lastName) VALUES('Andriy', 'Shevchenko')");
+	queryString.append("INSERT INTO Players(firstName, lastName, dateofbirth) VALUES('");
+	queryString.append(newPlayer.getFirstName() + "', '");
+	queryString.append(newPlayer.getLastName() + "', '");
+	queryString.append(newPlayer.getDateOfBirth() + "')");
+
+	error = stmt->executeUpdate(queryString);
 
 	disconnect();
 }
@@ -90,10 +105,9 @@ void Storage::deletePlayer(Player& deletedPlayer)
 	disconnect();
 }
 
-
 void Storage::connect()
 {
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "1234");
+	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
 	con->setSchema("cppfinal");
 	stmt = con->createStatement();
 	queryString = "";
@@ -110,5 +124,10 @@ void Storage::disconnect()
 
 void Storage::seedDb()
 {
+	int error;
+	connect();
 
+	//read seed.sql
+	
+	disconnect();
 }

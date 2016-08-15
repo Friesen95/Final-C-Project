@@ -18,6 +18,7 @@ public:
 	void setFirstName(string);
 	void setLastName(string);
 	void setDateOfBirth(string);
+	void clear();
 private:
 	int id;
 	string firstName;
