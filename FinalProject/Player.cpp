@@ -48,3 +48,9 @@ void Player::setDateOfBirth(string dateOfBirth)
 {
 	this->dateOfBirth = dateOfBirth;
 }
+void Player::clear() {
+	id = -1;
+	firstName = "";
+	lastName = "";
+	dateOfBirth = "";
+}

@@ -21,45 +21,12 @@ headers from cppconn/ and mysql_driver.h + mysql_util.h
 
 using namespace std;
 
-//int main(void)
-//{
-//	sql::Driver *driver;
-//	sql::Connection *con;
-//	sql::Statement *stmt;
-//	sql::ResultSet *res;
-//
-//	/* Create a connection */
-//	driver = get_driver_instance();
-//	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
-//
-//	/* Connect to the MySQL test database */
-//	con->setSchema("test");
-//	stmt = con->createStatement();
-//
-//	/*stmt->execute("USE test");
-//	stmt->execute("DROP TABLE IF EXISTS test");
-//	stmt->execute("CREATE TABLE test(id INT, label CHAR(1))");
-//	stmt->execute("INSERT INTO test(id, label) VALUES (1, 'a')");*/
-//
-//	res = stmt->executeQuery("SELECT id, label FROM test ORDER BY id ASC");
-//	while (res->next()) {
-//		// You can use either numeric offsets...
-//		cout << "id = " << res->getString("id"); // getInt(1) returns the first column
-//												 // ... or column names for accessing results.
-//												 // The latter is recommended.
-//		cout << ", label = '" << res->getString("label") << "'" << endl;
-//	}
-//
-//	delete res;
-//	delete stmt;
-//	delete con;
-//	cout << "Done" << endl;
-//	system("pause");
-//	return 0;
-//}
-Storage manager = Storage();
+Storage db = Storage();
+Player player = Player();
+
 int main()
 {
+	PopulateTestData();
 	MainMenu();
 
 	system("PAUSE");
@@ -93,8 +60,11 @@ void MainMenu() {
 		switch (choice) {
 			//valid input
 		case 1: case 2: case 3: case 4: case 5:
+			cin.clear(); //clear the buffer
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
 			SubMenu(choice);
 			choice = 0; //Return user to Main Menu
+			player.clear(); //Clear Player data
 			break;
 			//Exit
 		case 6:
@@ -109,7 +79,9 @@ void MainMenu() {
 		}
 	} while (choice == -1 || choice == 0);
 }
-int SubMenu(int choice) {
+void SubMenu(int choice) {
+	int playerId = -1;
+	string firstName, lastName, dob;
 	system("cls");//clear screen
 	switch (choice) {
 	case 1:
@@ -117,51 +89,93 @@ int SubMenu(int choice) {
 			<< "*************************\n"
 			<< "*     Create Player     *\n"
 			<< "*************************\n";
-		
+		db.printAllPlayers();
+		//Create First Name
+		cout << "First Name: ";
+		getline(cin, firstName);
+		if (firstName != "")
+			player.setFirstName(firstName);
+		//Create Last Name
+		cout << "Last Name: ";
+		getline(cin, lastName);
+		if (lastName != "")
+			player.setLastName(lastName);
+		cout << "DOB (mm/dd/yyyy): ";
+		getline(cin, dob);
+		if (dob != "")
+			player.setDateOfBirth(dob);
+
+		db.createPlayer(player); //Create player
 		break;
 	case 2:
 		cout
 			<< "*************************\n"
 			<< "*      Edit Player      *\n"
 			<< "*************************\n";
+		db.printAllPlayers();
+		//Choose Player by Id
+		cout << "Which player would you like to edit?" << endl
+			<< "Player #";
+		cin >> playerId;
+		player.setId(playerId);
+		db.getPlayer(player); //print selected player
+		cout << "Leave any fields blank that you don't want changed..." << endl;
+		cin.clear(); //clear the buffer
+		cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
+		//Edit First Name
+		cout << "First Name (" << player.getFirstName() << "): ";
+		getline(cin, firstName);
+		if (firstName != "")
+			player.setFirstName(firstName);
+		//Edit Last Name
+		cout << "Last Name (" << player.getLastName() << "): ";
+		getline(cin, lastName);
+		if (lastName != "")
+			player.setLastName(lastName);
+		//Edit Date of Birth
+		cout << "DOB (" << player.getDateOfBirth() << "): ";
+		getline(cin, dob);
+		if (dob != "")
+			player.setDateOfBirth(dob);
+
+		db.updatePlayer(player); //update player
+		db.getPlayer(player); //print updated info
 		break;
 	case 3:
 		cout
 			<< "*************************\n"
 			<< "*     Delete Player     *\n"
 			<< "*************************\n";
+		db.printAllPlayers();
+		cout << "Which player would you like to delete?" << endl
+			<< "Player #";
+		cin >> playerId;
+		player.setId(playerId);
+		db.deletePlayer(player);
 		break;
 	case 4:
 		cout
 			<< "*************************\n"
 			<< "*      Print Player     *\n"
 			<< "*************************\n";
+		player.setId(1);
+		player.setFirstName("Dan");
+		player.setLastName("Masci");
+		db.getPlayer(player);
 		break;
 	case 5:
 		cout
 			<< "*************************\n"
 			<< "*       Print Team      *\n"
 			<< "*************************\n";
+		db.printAllPlayers();
 		break;
 	}
 	system("pause");
-	return choice;
 }
 void PopulateTestData() {
-	createPlayer("Dan", "Masci", "01/01/95");
-	createPlayer("Alex", "Friesen", "01/01/95");
-	createPlayer("Alex", "Andriishyn", "01/01/95");
-	createPlayer("Mike", "Masci", "01/01/95");
-	createPlayer("Joel", "Masci", "01/01/95");
-	createPlayer("Jesse", "Masci", "01/01/95");
-	createPlayer("Judy", "Masci", "01/01/95");
-	createPlayer("John", "Masci", "01/01/95");
-	createPlayer("Sarah", "Masci", "01/01/95");
-	createPlayer("Anna", "Masci", "01/01/95");
-}
-void createPlayer(string firstName, string lastName, string dob) {
-	//Create Dummy-Player for PopulateTestData() by inputting Players into db
-	cout << "createPlayer()\n";
+	player.clear(); //Clear Player data
+	db.seedDb();
 }
 
 
