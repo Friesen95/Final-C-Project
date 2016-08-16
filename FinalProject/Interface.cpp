@@ -13,6 +13,7 @@ using namespace Validator;
 
 Storage db = Storage();
 Player player = Player();
+int playerId = -1;
 
 void MainMenu()
 {
@@ -35,9 +36,9 @@ void MainMenu()
 		choice = validateAnswer(5);
 		switch (choice) {
 		case 1: case 2: case 3: case 4: case 5:
-			SubMenu(choice);
-			choice = -1; //Return user to Main Menu
 			player.clear(); //Clear Player data
+			SubMenu(choice); //Go to Menu choice
+			choice = -1; //Return user to Main Menu
 			break;
 			//Exit
 		case 0:
@@ -49,7 +50,6 @@ void MainMenu()
 
 void SubMenu(int choice)
 {
-	int playerId = -1;
 	system("cls");//clear screen
 	switch (choice) {
 	case 1:
@@ -57,60 +57,62 @@ void SubMenu(int choice)
 			<< "*************************\n"
 			<< "*     Create Player     *\n"
 			<< "*************************\n";
-		db.printAllPlayers(); //Show all current players
-		setPlayerFields(player); //Get User Input for all fields
+		db.printAllPlayers(); //Show all current players - before
+		setPlayerFields(); //Get User Input for all fields
 		db.createPlayer(player); //Create player
+
+		system("cls");//clear screen
+		cout
+			<< "*********************************\n"
+			<< "* " << player.getFirstName() << " " 
+					<< player.getLastName() 
+					<< " has been Created\n"
+			<< "*********************************\n";
+		db.printAllPlayers(); //Show all current players - after
 		break;
 	case 2:
 		cout
 			<< "*************************\n"
 			<< "*      Edit Player      *\n"
 			<< "*************************\n";
-		db.printAllPlayers(); //Show all current players
-		//Choose Player by Id
-		cout << "Which player would you like to edit?" << endl
-			<< "Player #";
-		cin >> playerId;
-		player.setId(playerId);
+		db.printAllPlayers(); //Show all current players - before
+		getPlayerIdFromUser("edit"); //Prompt user to choose an existing Player
 
-		// Check if the selected player exists
-		if (db.getPlayer(player))
-		{
-			cin.clear(); //clear the buffer
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
-			cout << "Leave any fields blank that you don't want changed..." << endl;
-			setPlayerFields(player); //Get User Input for all fields
-			db.updatePlayer(player); //update player
-			db.getPlayer(player); //print updated info
-		}
-		else
-		{
-			cout << "Sorry, we couldn't locate the specified player id. ";
-			cin.clear(); //clear the buffer
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
-		}
+		cout << endl << "Leave any fields blank that you don't want changed..." << endl;
+		setPlayerFields(); //Get User Input for all fields
+		db.updatePlayer(player); //update player
+
+		system("cls");//clear screen
+		cout
+			<< "*********************************\n"
+			<< "* Player #" << playerId << " has been Updated\n"
+			<< "*********************************\n";
+		db.printAllPlayers(); //Show all current players - after
 		break;
 	case 3:
 		cout
 			<< "*************************\n"
 			<< "*     Delete Player     *\n"
 			<< "*************************\n";
-		db.printAllPlayers(); //Show all current players
-		cout << "Which player would you like to delete?" << endl
-			<< "Player #";
-		cin >> playerId;
-		player.setId(playerId);
+		db.printAllPlayers(); //Show all current players - before
+		getPlayerIdFromUser("delete"); //Prompt user to choose an existing Player
 		db.deletePlayer(player); //Delete player
+
+		system("cls");//clear screen
+		cout
+			<< "*********************************\n"
+			<< "* Player #" << playerId << " has been Deleted\n"
+			<< "*********************************\n";
+		db.printAllPlayers(); //Show all current players - after
 		break;
 	case 4:
 		cout
 			<< "*************************\n"
 			<< "*      Search Player     *\n"
 			<< "*************************\n";
-		player.clear();
 		cout << "Leave any fields blank that you don't want to be searched by..." << endl;
-		setPlayerFields(player); //Get User Input for all fields
-		db.getPlayer(player); //Return player if found
+		setPlayerFields(); //Get User Input for all fields
+		db.getPlayers(player); //Return player if found
 		break;
 	case 5:
 		cout
@@ -123,7 +125,20 @@ void SubMenu(int choice)
 	system("pause");
 }
 
-void setPlayerFields(Player& player)
+void getPlayerIdFromUser(string cmd) {
+	do {
+		cout << "Which player would you like to " << cmd << "?" << endl;
+		cout << "Player #";
+		cin >> playerId;
+		player.setId(playerId);
+
+		//fix buffer in case string is entered
+		cin.clear(); //clear the buffer
+		cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
+	} while (!db.setPlayer(player));
+}
+
+void setPlayerFields()
 {
 	string firstName, lastName, dob;
 

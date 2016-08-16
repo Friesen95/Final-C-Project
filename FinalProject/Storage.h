@@ -12,7 +12,8 @@ class Storage
 public:
 	Storage();
 	void printAllPlayers();
-	bool getPlayer(Player&);
+	bool setPlayer(Player&);
+	bool getPlayers(Player&);
 	void createPlayer(Player&);
 	void updatePlayer(Player&);
 	void deletePlayer(Player&);
