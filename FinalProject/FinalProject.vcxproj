@@ -113,7 +113,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Header.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="Validator.h" />
