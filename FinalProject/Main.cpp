@@ -1,14 +1,15 @@
-/* Standard C++ includes */
-#include <stdlib.h>
-#include <iostream>
 #include "Header.h"
 #include "Player.h"
 #include "Storage.h"
+#include "Validator.h"
+#include <stdlib.h>
+#include <iostream>
 #include <iostream>
 #include <fstream>
 #include <string>
 
 using namespace std;
+using namespace Validator;
 
 Storage db = Storage();
 Player player = Player();
@@ -17,19 +18,17 @@ int main()
 {
 	PopulateTestData();
 	MainMenu();
-
+	
 	system("PAUSE");
 	return 0;
 }
-void MainMenu() {
-	int choice = 0;
+
+void MainMenu() 
+{
+	int choice = -1;
 	string message;
 	do {
 		system("cls");//clear screen
-		if (choice == -1)
-			message = "Invalid Input. Try again...\n";
-		else
-			message = "\n";
 		cout
 			<< "*************************\n"
 			<< "*       Main Menu       *\n"
@@ -39,36 +38,26 @@ void MainMenu() {
 			<< "3) Delete Player\n"
 			<< "4) Print Player\n"
 			<< "5) Print Team\n"
-			<< "6) Exit\n"
-			<< message
-			<< "Option: ";
-		/**
-		*	Get Answer from User
-		*/
-		cin >> choice;
+			<< "0) Exit\n"
+			<< message;
+		// Get answer from User
+		choice = validateAnswer(5);
 		switch (choice) {
-			//valid input
 		case 1: case 2: case 3: case 4: case 5:
-			cin.clear(); //clear the buffer
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
 			SubMenu(choice);
-			choice = 0; //Return user to Main Menu
+			choice = -1; //Return user to Main Menu
 			player.clear(); //Clear Player data
 			break;
 			//Exit
-		case 6:
-			"Goodbye...";
-			break;
-			//invalid input
-		default:
-			choice = -1; //prompt user to re-enter Option
-			cin.clear(); //clear the buffer
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
+		case 0:
+			cout << "Goodbye. ";
 			break;
 		}
-	} while (choice == -1 || choice == 0);
+	} while (choice != 0);
 }
-void SubMenu(int choice) {
+
+void SubMenu(int choice) 
+{
 	int playerId = -1;
 	string firstName, lastName, dob;
 	system("cls");//clear screen
@@ -162,7 +151,9 @@ void SubMenu(int choice) {
 	}
 	system("pause");
 }
-void PopulateTestData() {
+
+void PopulateTestData() 
+{
 	player.clear(); //Clear Player data
 	db.seedDb();
 }
