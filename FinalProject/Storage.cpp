@@ -59,8 +59,12 @@ bool Storage::getPlayer(Player& p)
 			p.setFirstName(res->getString("firstName"));
 			p.setDateOfBirth(res->getString("dateOfBirth"));
 			//Print player to screen
-			cout << "Player #" << p.getId() << ": " << p.getFirstName() << " " << p.getLastName() << endl;
+			cout << "Player #" << p.getId() << ": " 
+				<< p.getFirstName() << " " 
+				<< p.getLastName() << " | " 
+				<< p.getDateOfBirth() << endl;
 		}
+
 	}
 
 	res->close();
@@ -118,7 +122,7 @@ void Storage::deletePlayer(Player& deletedPlayer)
 
 void Storage::connect()
 {
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "1234");
+	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
 	con->setSchema("cppfinal");
 	stmt = con->createStatement();
 	queryString = "";
