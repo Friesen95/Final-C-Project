@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-
 using namespace std;
 
 int Validator::validateAnswer(int range)

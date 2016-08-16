@@ -30,7 +30,7 @@ void Storage::printAllPlayers()
 
 // Gets a player by id, first name and lastname
 // Need to fix the where clause!
-void Storage::getPlayer(Player& p)
+bool Storage::getPlayer(Player& p)
 {
 	connect();
 
@@ -44,22 +44,30 @@ void Storage::getPlayer(Player& p)
 
 	res = stmt->executeQuery(queryString);
 
-	//Display all players that meet the search criteria
-	while (res->next())
+	// If result set is empty, inform caller
+	if (res->rowsCount() == 0)
 	{
-		// Update the player reference
-		p.setId(stoi(res->getString("id")));
-		p.setLastName(res->getString("LastName"));
-		p.setFirstName(res->getString("firstName"));
-		p.setDateOfBirth(res->getString("dateOfBirth"));
-		//Print player to screen
-		cout << "Player #" << p.getId() << ": " << p.getFirstName() << " " << p.getLastName() << endl;
+		return false;
 	}
-
+	else
+	{
+		//Display all players that meet the search criteria
+		while (res->next())
+		{
+			// Update the player reference
+			p.setId(stoi(res->getString("id")));
+			p.setLastName(res->getString("LastName"));
+			p.setFirstName(res->getString("firstName"));
+			p.setDateOfBirth(res->getString("dateOfBirth"));
+			//Print player to screen
+			cout << "Player #" << p.getId() << ": " << p.getFirstName() << " " << p.getLastName() << endl;
+		}
+	}
 
 	res->close();
 	delete res;
 	disconnect();
+	return true;
 }
 
 void Storage::createPlayer(Player& newPlayer)

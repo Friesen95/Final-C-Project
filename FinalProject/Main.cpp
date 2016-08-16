@@ -96,28 +96,39 @@ void SubMenu(int choice)
 			<< "Player #";
 		cin >> playerId;
 		player.setId(playerId);
-		db.getPlayer(player); //print selected player
-		cout << "Leave any fields blank that you don't want changed..." << endl;
-		cin.clear(); //clear the buffer
-		cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
-		//Edit First Name
-		cout << "First Name (" << player.getFirstName() << "): ";
-		getline(cin, firstName);
-		if (firstName != "")
-			player.setFirstName(firstName);
-		//Edit Last Name
-		cout << "Last Name (" << player.getLastName() << "): ";
-		getline(cin, lastName);
-		if (lastName != "")
-			player.setLastName(lastName);
-		//Edit Date of Birth
-		cout << "DOB (" << player.getDateOfBirth() << "): ";
-		getline(cin, dob);
-		if (dob != "")
-			player.setDateOfBirth(dob);
 
-		db.updatePlayer(player); //update player
-		db.getPlayer(player); //print updated info
+		// Check if the selected player exists
+		if (db.getPlayer(player))
+		{
+			//print selected player
+			cout << "Leave any fields blank that you don't want changed..." << endl;
+			cin.clear(); //clear the buffer
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
+			//Edit First Name
+			cout << "First Name (" << player.getFirstName() << "): ";
+			getline(cin, firstName);
+			if (firstName != "")
+				player.setFirstName(firstName);
+			//Edit Last Name
+			cout << "Last Name (" << player.getLastName() << "): ";
+			getline(cin, lastName);
+			if (lastName != "")
+				player.setLastName(lastName);
+			//Edit Date of Birth
+			cout << "DOB (" << player.getDateOfBirth() << "): ";
+			getline(cin, dob);
+			if (dob != "")
+				player.setDateOfBirth(dob);
+
+			db.updatePlayer(player); //update player
+			db.getPlayer(player); //print updated info
+		}
+		else
+		{
+			cout << "Sorry, we couldn't locate the player with the specified id ..." << endl;
+			cin.clear(); //clear the buffer
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
+		}
 		break;
 	case 3:
 		cout
@@ -157,5 +168,3 @@ void PopulateTestData()
 	player.clear(); //Clear Player data
 	db.seedDb();
 }
-
-
