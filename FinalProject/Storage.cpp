@@ -152,7 +152,7 @@ void Storage::deletePlayer(Player& deletedPlayer)
 //Connect to DB
 void Storage::connect()
 {
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
+	con = driver->connect("tcp://127.0.0.1:3306", "root", "1234");
 	con->setSchema("cppfinal");
 	stmt = con->createStatement();
 	queryString = "";
