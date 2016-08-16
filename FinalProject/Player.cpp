@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// add team name, number, salary and position 
 Player::Player() {}
 Player::Player(string firstName, string lastName, string dateOfBirth)
 	: firstName(firstName), lastName(lastName), dateOfBirth(dateOfBirth)

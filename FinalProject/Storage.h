@@ -12,7 +12,7 @@ class Storage
 public:
 	Storage();
 	void printAllPlayers();
-	void getPlayer(Player&);
+	bool getPlayer(Player&);
 	void createPlayer(Player&);
 	void updatePlayer(Player&);
 	void deletePlayer(Player&);
