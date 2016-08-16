@@ -28,18 +28,44 @@ void Storage::printAllPlayers()
 	disconnect();
 }
 
-// Gets a player by id, first name and lastname
-bool Storage::getPlayer(Player& p)
+//Set our global Player variable
+bool Storage::setPlayer(Player& p) {
+	bool playerFound = false;
+	connect();
+
+	//Find player by Id
+	queryString.append("SELECT * FROM Players WHERE id = ");
+	queryString.append(to_string(p.getId()));
+	res = stmt->executeQuery(queryString);
+
+	//If query returns a result
+	if (res->next()) {
+		playerFound = true;
+		p.setFirstName(res->getString("firstName"));
+		p.setLastName(res->getString("lastName"));
+		p.setDateOfBirth(res->getString("dateOfBirth"));
+	}
+	else {
+		playerFound = false;
+		cout << "Player not found. ";
+	}
+
+	disconnect();
+	return playerFound;
+}
+
+//Searches for all players that meet the user-inputted criteria
+bool Storage::getPlayers(Player& p)
 {
 	connect();
 
 	//Build querystring - dependant on which information the user inputs
 	queryString.append("SELECT * FROM Players WHERE ");
-	queryString.append(p.getId() != -1 ? "id = " + to_string(p.getId()) + " " : "");
-	queryString.append(p.getId() != -1 && p.getFirstName() != "" ? "AND " : "");
-	queryString.append(p.getFirstName() != "" ? "firstName = '" + p.getFirstName() + "' " : "");
-	queryString.append((p.getId() != -1 || p.getFirstName() != "") && p.getLastName() != "" ? "AND " : "");
-	queryString.append(p.getLastName() != "" ? "lastName = '" + p.getLastName() + "' " : "");
+	queryString.append(p.getFirstName() != "" ? "firstName LIKE '%" + p.getFirstName() + "%' " : "");
+	queryString.append(p.getFirstName() != "" && p.getLastName() != "" ? "AND " : "");
+	queryString.append(p.getLastName() != "" ? "lastName LIKE '%" + p.getLastName() + "%' " : "");
+	queryString.append((p.getFirstName() != "" || p.getLastName() != "") && p.getDateOfBirth() != "" ? "AND " : "");
+	queryString.append(p.getDateOfBirth() != "" ? "dateOfBirth LIKE '%" + p.getDateOfBirth() + "%' " : "");
 
 	res = stmt->executeQuery(queryString);
 
@@ -73,6 +99,7 @@ bool Storage::getPlayer(Player& p)
 	return true;
 }
 
+//Create Player in DB
 void Storage::createPlayer(Player& newPlayer)
 {
 	int error;
@@ -88,6 +115,7 @@ void Storage::createPlayer(Player& newPlayer)
 	disconnect();
 }
 
+//Update Player in DB
 void Storage::updatePlayer(Player& updatedPlayer)
 {
 	int error;
@@ -107,11 +135,12 @@ void Storage::updatePlayer(Player& updatedPlayer)
 	disconnect();
 }
 
+//Delete Player from DB
 void Storage::deletePlayer(Player& deletedPlayer)
 {
 	int error;
 	connect();
-
+	
 	queryString.append("DELETE FROM Players WHERE id = ");
 	queryString.append(to_string(deletedPlayer.getId()));
 
@@ -120,6 +149,7 @@ void Storage::deletePlayer(Player& deletedPlayer)
 	disconnect();
 }
 
+//Connect to DB
 void Storage::connect()
 {
 	con = driver->connect("tcp://127.0.0.1:3306", "root", "chaoss");
@@ -128,6 +158,7 @@ void Storage::connect()
 	queryString = "";
 }
 
+//Disconnect from DB
 void Storage::disconnect()
 {
 	queryString = "";
@@ -137,6 +168,7 @@ void Storage::disconnect()
 	delete con;
 }
 
+//Seed the DB with Base Data
 void Storage::seedDb()
 {
 	//int error;
