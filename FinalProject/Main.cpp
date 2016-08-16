@@ -1,4 +1,4 @@
-#include "Header.h"
+#include "Main.h"
 #include "Player.h"
 #include "Storage.h"
 #include "Validator.h"
@@ -36,7 +36,7 @@ void MainMenu()
 			<< "1) Create Player\n"
 			<< "2) Edit Player\n"
 			<< "3) Delete Player\n"
-			<< "4) Print Player\n"
+			<< "4) Search Player\n"
 			<< "5) Print Team\n"
 			<< "0) Exit\n"
 			<< message;
@@ -59,7 +59,6 @@ void MainMenu()
 void SubMenu(int choice) 
 {
 	int playerId = -1;
-	string firstName, lastName, dob;
 	system("cls");//clear screen
 	switch (choice) {
 	case 1:
@@ -68,21 +67,7 @@ void SubMenu(int choice)
 			<< "*     Create Player     *\n"
 			<< "*************************\n";
 		db.printAllPlayers();
-		//Create First Name
-		cout << "First Name: ";
-		getline(cin, firstName);
-		if (firstName != "")
-			player.setFirstName(firstName);
-		//Create Last Name
-		cout << "Last Name: ";
-		getline(cin, lastName);
-		if (lastName != "")
-			player.setLastName(lastName);
-		cout << "DOB (mm/dd/yyyy): ";
-		getline(cin, dob);
-		if (dob != "")
-			player.setDateOfBirth(dob);
-
+		setPlayerFields(player);
 		db.createPlayer(player); //Create player
 		break;
 	case 2:
@@ -100,32 +85,16 @@ void SubMenu(int choice)
 		// Check if the selected player exists
 		if (db.getPlayer(player))
 		{
-			//print selected player
-			cout << "Leave any fields blank that you don't want changed..." << endl;
 			cin.clear(); //clear the buffer
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
-			//Edit First Name
-			cout << "First Name (" << player.getFirstName() << "): ";
-			getline(cin, firstName);
-			if (firstName != "")
-				player.setFirstName(firstName);
-			//Edit Last Name
-			cout << "Last Name (" << player.getLastName() << "): ";
-			getline(cin, lastName);
-			if (lastName != "")
-				player.setLastName(lastName);
-			//Edit Date of Birth
-			cout << "DOB (" << player.getDateOfBirth() << "): ";
-			getline(cin, dob);
-			if (dob != "")
-				player.setDateOfBirth(dob);
-
+			cout << "Leave any fields blank that you don't want changed..." << endl;
+			setPlayerFields(player);
 			db.updatePlayer(player); //update player
 			db.getPlayer(player); //print updated info
 		}
 		else
 		{
-			cout << "Sorry, we couldn't locate the player with the specified id ..." << endl;
+			cout << "Sorry, we couldn't locate the specified player id. ";
 			cin.clear(); //clear the buffer
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ignore the next line of input - to fix cin bug
 		}
@@ -145,11 +114,11 @@ void SubMenu(int choice)
 	case 4:
 		cout
 			<< "*************************\n"
-			<< "*      Print Player     *\n"
+			<< "*      Search Player     *\n"
 			<< "*************************\n";
-		player.setId(1);
-		player.setFirstName("Dan");
-		player.setLastName("Masci");
+		player.clear();
+		cout << "Leave any fields blank that you don't want to be searched by..." << endl;
+		setPlayerFields(player);
 		db.getPlayer(player);
 		break;
 	case 5:
@@ -161,6 +130,27 @@ void SubMenu(int choice)
 		break;
 	}
 	system("pause");
+}
+
+void setPlayerFields(Player& player)
+{
+	string firstName, lastName, dob;
+	
+	//Edit First Name
+	cout << "First Name (" << player.getFirstName() << "): ";
+	getline(cin, firstName);
+	if (firstName != "")
+		player.setFirstName(firstName);
+	//Edit Last Name
+	cout << "Last Name (" << player.getLastName() << "): ";
+	getline(cin, lastName);
+	if (lastName != "")
+		player.setLastName(lastName);
+	//Edit Date of Birth
+	cout << "DOB (" << player.getDateOfBirth() << "): ";
+	getline(cin, dob);
+	if (dob != "")
+		player.setDateOfBirth(dob);
 }
 
 void PopulateTestData() 

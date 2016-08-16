@@ -29,7 +29,6 @@ void Storage::printAllPlayers()
 }
 
 // Gets a player by id, first name and lastname
-// Need to fix the where clause!
 bool Storage::getPlayer(Player& p)
 {
 	connect();
